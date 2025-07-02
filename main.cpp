@@ -1,39 +1,54 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstdlib>
+using namespace std;
 
 enum class Option{
 	LIST,
 	UPDATE,
 	ADD,
 	DELETE,
-	EXIT
+	EXIT,
+	INVALID
 };
 
+Option convertIntToOption(int number){
+	if(number == 1) return Option::LIST;
+	else if(number == 2) return Option::UPDATE;
+	else if(number == 3) return Option::ADD;
+	else if(number == 4) return Option::DELETE;
+	else if(number == 5) return Option::EXIT;
+	else return Option::INVALID;
+}
+
+void printMainMenu(){
+	string main_menu = R"(
+1 - List tasks
+2 - Update task
+3 - Add task
+4 - Delete task
+5 - Exit)";
+
+	cout << main_menu << "\n\n";
+}
+
 int main(){
-	std::fstream MyFile("task-list.txt", std::fstream::in | std::fstream::out);
+	fstream MyFile("task-list.txt", fstream::in | fstream::out);
+	string text_fragment;
+	string file_full_text;
+	string users_choice;
 
-	std::string text_fragment;
-	std::string file_full_text;
-
-	while( std::getline(MyFile, text_fragment) )
+	while( getline(MyFile, text_fragment) )
 		file_full_text.append(text_fragment + "\n");
 
-	//std::cout << file_full_text;
+	system("clear");
+	cout << "Task Manager\n";
+	printMainMenu();
 
-	std::string users_choice;
 
-	std::cout << "Task Manager\n";
-	std::cout << R"(
-	1 - List tasks
-	2 - Update task
-	3 - Add task
-	4 - Delete task
-	5 - Exit)" << std::endl;
-
-        
 	while(true){
-		std::cin >> users_choice;
+		cin >> users_choice;
 
 		switch( stoi(users_choice) ){
 		case 5:
@@ -41,7 +56,9 @@ int main(){
 			return 0;
 			break;
 		default:
-			std::cout << "Invalid option: " << users_choice << std::endl;
+			system("clear");
+			printMainMenu();
+			cout << "Invalid option: " << users_choice << "\n\n";
 		}
 	}
 
