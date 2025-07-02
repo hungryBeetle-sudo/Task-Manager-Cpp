@@ -49,16 +49,29 @@ int main(){
 
 	while(true){
 		cin >> users_choice;
+		int user_input_int = stoi(users_choice);
 
-		switch( stoi(users_choice) ){
-		case 5:
+		switch( convertIntToOption(user_input_int) ){
+		case Option::LIST:
+		case Option::ADD:
+		case Option::UPDATE:
+		case Option::DELETE:
+			system("clear");
+			printMainMenu();
+			cout << "This option isn't properly working.\n\n";
+			break;
+		case Option::EXIT:
 			MyFile.close();
 			return 0;
+		case Option::INVALID:
+			system("clear");
+			printMainMenu();
+			cout << "Invalid option: " << users_choice << "\n\n";
 			break;
 		default:
 			system("clear");
 			printMainMenu();
-			cout << "Invalid option: " << users_choice << "\n\n";
+			cout << "Unknown error. User input: " << users_choice << "\n\n";
 		}
 	}
 
