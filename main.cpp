@@ -2,6 +2,8 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
+#include <sstream>
+#include <limits>
 using namespace std;
 
 enum class Option{
@@ -33,6 +35,23 @@ void printMainMenu(){
 	cout << main_menu << "\n\n";
 }
 
+void listTasks(string file_full_text){
+	stringstream ss(file_full_text);
+	char delimiter = '\n';
+	string aux_string;
+
+	while( getline(ss, aux_string, delimiter) ){
+		cout << aux_string << "\n";
+	}
+
+	cout << "\n";
+
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "Enter anything to return." << std::endl;
+	cin.get();
+	system("clear");
+}
+
 int main(){
 	fstream MyFile("task-list.txt", fstream::in | fstream::out);
 	string text_fragment;
@@ -44,20 +63,23 @@ int main(){
 
 	system("clear");
 	cout << "Task Manager\n";
-	printMainMenu();
 
 
 	while(true){
+		printMainMenu();
+
 		cin >> users_choice;
 		int user_input_int = stoi(users_choice);
 
 		switch( convertIntToOption(user_input_int) ){
 		case Option::LIST:
+			system("clear");
+			listTasks(file_full_text);
+			break;
 		case Option::ADD:
 		case Option::UPDATE:
 		case Option::DELETE:
 			system("clear");
-			printMainMenu();
 			cout << "This option isn't properly working.\n\n";
 			break;
 		case Option::EXIT:
@@ -65,12 +87,10 @@ int main(){
 			return 0;
 		case Option::INVALID:
 			system("clear");
-			printMainMenu();
 			cout << "Invalid option: " << users_choice << "\n\n";
 			break;
 		default:
 			system("clear");
-			printMainMenu();
 			cout << "Unknown error. User input: " << users_choice << "\n\n";
 		}
 	}
