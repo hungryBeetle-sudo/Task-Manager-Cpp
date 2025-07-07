@@ -46,35 +46,60 @@ void listTasks(string file_full_text){
 
 	cout << "\n";
 
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cout << "Enter anything to return." << std::endl;
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	cout << "Enter anything to return." << std::endl;
 	cin.get();
 	system("clear");
 }
 
-int main(){
-	fstream MyFile("task-list.txt", fstream::in | fstream::out);
-	string text_fragment;
-	string file_full_text;
-	string users_choice;
+void listTask(fstream* MyFile){
+	string text_line;
 
-	while( getline(MyFile, text_fragment) )
-		file_full_text.append(text_fragment + "\n");
+	while( getline(*MyFile, text_line) ){
+		cout << text_line << "\n";
+	}
+
+	cout << "\n";
+
+	MyFile->close();
+
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	cout << "Enter anything to return." << std::endl;
+	cin.get();
+	system("clear");
+}
+
+//Still not working!
+void addTask(fstream* MyFile){
+	string new_task_text;
+
+	cout << "Write the new task:\n";
+	cin >> new_task_text;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	MyFile->clear();
+	*MyFile << new_task_text;
+	MyFile->close();
+	
+	system("clear");
+}
+
+int main(){
+	string users_choice;
+	int user_input_int = 0;
 
 	system("clear");
 	cout << "Task Manager\n";
 
-
 	while(true){
+		fstream MyFile("task-list.txt", fstream::in | fstream::out);
 		printMainMenu();
-
 		cin >> users_choice;
-		int user_input_int = stoi(users_choice);
+		user_input_int = stoi(users_choice);
 
 		switch( convertIntToOption(user_input_int) ){
 		case Option::LIST:
 			system("clear");
-			listTasks(file_full_text);
+			listTask(&MyFile);
 			break;
 		case Option::ADD:
 		case Option::UPDATE:
