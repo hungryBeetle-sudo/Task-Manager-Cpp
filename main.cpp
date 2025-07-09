@@ -59,27 +59,25 @@ void listTask(fstream* MyFile){
 		cout << text_line << "\n";
 	}
 
-	cout << "\n";
-
 	MyFile->close();
 
-	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	cout << "Enter anything to return." << std::endl;
+	cout << "\nPress enter to return." << std::endl;
 	cin.get();
 	system("clear");
 }
 
-//Still not working!
 void addTask(fstream* MyFile){
 	string new_task_text;
 
+	system("clear");
 	cout << "Write the new task:\n";
-	cin >> new_task_text;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	MyFile->clear();
-	*MyFile << new_task_text;
-	MyFile->close();
-	
+	getline(cin, new_task_text);
+
+	MyFile->seekp(0, std::ios::end);
+	*MyFile << new_task_text << "\n";
+
+	cout << "\nThe new task was added. Press enter to return.";
+	cin.get();
 	system("clear");
 }
 
@@ -94,6 +92,7 @@ int main(){
 		fstream MyFile("task-list.txt", fstream::in | fstream::out);
 		printMainMenu();
 		cin >> users_choice;
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		user_input_int = stoi(users_choice);
 
 		switch( convertIntToOption(user_input_int) ){
@@ -102,6 +101,8 @@ int main(){
 			listTask(&MyFile);
 			break;
 		case Option::ADD:
+			addTask(&MyFile);
+			break;
 		case Option::UPDATE:
 		case Option::DELETE:
 			system("clear");
@@ -117,7 +118,10 @@ int main(){
 		default:
 			system("clear");
 			cout << "Unknown error. User input: " << users_choice << "\n\n";
+			return 1;
 		}
+
+		MyFile.close();
 	}
 
 }
