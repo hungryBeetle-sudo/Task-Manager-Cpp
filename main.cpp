@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <sstream>
 #include <limits>
+#include <vector>
+#include <regex>
 using namespace std;
 
 enum class Option{
@@ -22,6 +24,32 @@ Option convertIntToOption(int number){
 	else if(number == 4) return Option::DELETE;
 	else if(number == 5) return Option::EXIT;
 	else return Option::INVALID;
+}
+
+struct Task{
+	int position;
+	string description;
+};
+
+string stringfyTask(Task task){
+	string formatted_task = task.position + " - " + task.description;
+	return formatted_task;
+}
+
+Task textToTask(string text){
+	vector<string> parts;
+	regex del(" - ");
+	sregex_token_iterator it(text.begin(), text.end(), del, -1);
+	sregex_token_iterator end;
+
+
+	while(it != end){
+		parts.push_back(*it);
+	}
+
+	Task task = { stoi(parts.at(0)) , parts.at(1) };
+
+	return task;
 }
 
 void printMainMenu(){
